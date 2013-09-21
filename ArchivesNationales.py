@@ -41,7 +41,7 @@ def main(args):
                                           alignment_template)
 
     if args.post_process:
-        alignment_fields = ['ARTIST']
+        alignment_fields = []
         collection.retrieve_metadata_alignments(alignment_fields,
                                                 alignment_template)
 
