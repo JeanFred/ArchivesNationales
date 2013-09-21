@@ -44,8 +44,23 @@ def main(args):
         alignment_fields = []
         collection.retrieve_metadata_alignments(alignment_fields,
                                                 alignment_template)
+        support_mapper = {
+            'papier': 'paper',
+            'parchemin': 'parchment',
+            'cire': 'wax',
+            'cuir': 'leather',
+            'plâtre': 'plaster',
+            'bois': 'wood',
+            'érable': 'maple',
+            'velin': 'Vellum'
+        }
+        mapping_methods = {
+        'Support': (split_and_apply_template_on_each, {'template': 'Technique', 'mapper': support_mapper}),
+        'Dimensions du document': (look_for_sizes, {})
+        }
 
-        reader = collection.post_process_collection(None)
+        
+        reader = collection.post_process_collection(mapping_methods)
         template_name = 'subst:Commons:Archives_Nationales/Ingestion'.encode('utf-8')
         front_titlefmt = ""
         variable_titlefmt = "%(Titre du document)s"
