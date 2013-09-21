@@ -9,8 +9,10 @@ import sys
 import re
 from uploadlibrary import metadata
 from uploadlibrary.UploadBot import DataIngestionBot, UploadBotArgumentParser
+from processors import split_and_apply_template_on_each, look_for_sizes
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
 
 
 class ArchivesMetadataCollection(metadata.MetadataCollection):
@@ -19,8 +21,10 @@ class ArchivesMetadataCollection(metadata.MetadataCollection):
 
     def handle_record(self, image_metadata):
         """Handle a record."""
-        filename = image_metadata['Source']
-        return metadata.MetadataRecord(filename, image_metadata)
+        filename = image_metadata['Fichier']
+        path = os.path.abspath(os.path.join('.', 'WIKI', filename))
+        image_metadata['subst'] = 'subst:'
+        return metadata.MetadataRecord(path, image_metadata)
 
 
 def main(args):
