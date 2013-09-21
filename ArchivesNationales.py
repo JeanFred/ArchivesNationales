@@ -63,8 +63,8 @@ def main(args):
         reader = collection.post_process_collection(mapping_methods)
         template_name = 'subst:Commons:Archives_Nationales/Ingestion'.encode('utf-8')
         front_titlefmt = ""
-        variable_titlefmt = "%(Titre du document)s"
-        rear_titlefmt = " - Archives Nationales - %(Cote du document)s"
+        variable_titlefmt = "%(Titre du document)s %(Page)s"
+        rear_titlefmt = " - Archives Nationales - %(Cote du document)s.%(_ext)s"
         uploadBot = DataIngestionBot(reader=reader,
                                      front_titlefmt=front_titlefmt,
                                      rear_titlefmt=rear_titlefmt,
