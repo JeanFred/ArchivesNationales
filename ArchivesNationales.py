@@ -72,7 +72,7 @@ def main(args):
                                      pagefmt=template_name)
 
     if args.upload:
-        uploadBot.doSingle()
+        uploadBot.run()
     elif args.dry_run:
         uploadBot.dry_run()
 
