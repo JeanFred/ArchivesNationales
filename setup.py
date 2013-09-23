@@ -8,7 +8,7 @@ except ImportError:
 
 packages = []
 requires = ['MassUploadLibrary']
-dependency_links = ['https://github.com/JeanFred/MassUploadLibrary/archive/master.tar.gz#egg=MassUploadLibrary'],
+dependency_links = ["https://github.com/JeanFred/MassUploadLibrary/archive/master.tar.gz#egg=MassUploadLibrary"]
 scripts  = []
 
 setup(
