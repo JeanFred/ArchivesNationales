@@ -41,9 +41,9 @@ def main(args):
                                           alignment_template)
 
     if args.post_process:
-        alignment_fields = []
-        collection.retrieve_metadata_alignments(alignment_fields,
-                                                alignment_template)
+        mapping_fields = []
+        mapper = commonprocessors.retrieve_metadata_alignments(mapping_fields,
+                                                               alignment_template)
         support_mapper = {
             'papier': 'paper',
             'parchemin': 'parchment',
