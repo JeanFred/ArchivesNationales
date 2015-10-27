@@ -6,11 +6,14 @@ __authors__ = 'User:Jean-Frédéric'
 
 import os
 import sys
-import re
+sys.path.append('/home/jeanfred/Tuile/wikimedia/pywikibot-core')
+from StringIO import StringIO
 from uploadlibrary import metadata
-from uploadlibrary.UploadBot import DataIngestionBot, UploadBotArgumentParser
-from processors import split_and_apply_template_on_each, look_for_sizes
 import uploadlibrary.PostProcessing as commonprocessors
+from uploadlibrary.UploadBot import UploadBotArgumentParser, make_title
+from uploadlibrary.UploadBot import DataIngestionBot
+import processors
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -23,16 +26,15 @@ class ArchivesMetadataCollection(metadata.MetadataCollection):
     def handle_record(self, image_metadata):
         """Handle a record."""
         filename = image_metadata['Fichier']
-        path = os.path.abspath(os.path.join('.', 'third', filename))
+        path = os.path.abspath(os.path.join('.', 'images', filename))
         return metadata.MetadataRecord(path, image_metadata)
 
 
 def main(args):
     """Main method."""
     collection = ArchivesMetadataCollection()
-    csv_file = 'Metadata_ArchivesNationales3-Cut.csv'
+    csv_file = 'Metadata_ArchivesNationales5.csv'
     collection.retrieve_metadata_from_csv(csv_file, delimiter=';')
-
     alignment_template = 'User:Jean-Frédéric/AlignmentRow'.encode('utf-8')
 
     if args.prepare_alignment:
@@ -46,29 +48,22 @@ def main(args):
                                                                alignment_template)
         mapping_methods = {
         'Support': commonprocessors.map_and_apply_technique(),
-        'Dimensions du document': (commonprocessors.parse_format, {}),
-        'Date du document': (commonprocessors.look_for_date, {}),
-        'Description du document': (commonprocessors.remove_linebreaks, {}),
+        'Dimensions': (commonprocessors.parse_format, {}),
+        'Date': (commonprocessors.look_for_date, {}),
+        'Analyse': (commonprocessors.remove_linebreaks, {}),
         'Cote du document': (commonprocessors.remove_linebreaks, {}),
-        'Titre du document': (commonprocessors.remove_linebreaks, {})
+        'Titre': (commonprocessors.remove_linebreaks, {})
         }
 
         categories_counter, categories_count_per_file = collection.post_process_collection(mapping_methods)
-        #metadata.categorisation_statistics(categories_counter, categories_count_per_file)
+        metadata.categorisation_statistics(categories_counter, categories_count_per_file)
 
 
     template_name = 'Commons:Archives_Nationales/Ingestion'.encode('utf-8')
     front_titlefmt = ""
-    variable_titlefmt = "%(Titre du document)s %(Page)s"
+    variable_titlefmt = "%(Titre)s"
     rear_titlefmt = " - Archives Nationales - %(Cote du document)s"
-    reader = iter(collection.records)
-    uploadBot = DataIngestionBot(reader=reader,
-                                 front_titlefmt=front_titlefmt,
-                                 rear_titlefmt=rear_titlefmt,
-                                 variable_titlefmt=variable_titlefmt,
-                                 pagefmt=template_name)
-
-    reader = iter(collection.records)
+    reader = iter(collection.records[2:])
     uploadBot = DataIngestionBot(reader=iter(reader),
                                  front_titlefmt=front_titlefmt,
                                  rear_titlefmt=rear_titlefmt,
